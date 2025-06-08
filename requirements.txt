@@ -1,0 +1,60 @@
+# Base dependencies with specific versions
+numpy>=1.24.0
+pandas>=1.5.3
+Pillow>=10.0.0
+pydantic>=2.5.0  # Updated for llama-index compatibility
+tqdm>=4.65.0
+
+# Core video processing
+yt-dlp>=2023.12.30
+openai-whisper>=20231117
+youtube-transcript-api>=0.6.1
+moviepy>=1.0.3
+
+# RAG dependencies
+llama-index>=0.9.48,<0.10.0  # Pinning to a version compatible with pydantic 2.x
+llama-index-core>=0.9.48,<0.10.0
+llama-index-vector-stores-lancedb>=0.1.3
+llama-index-multi-modal-llms-openai>=0.1.3
+llama-index-embeddings-clip>=0.1.3
+lancedb>=0.4.0
+pyarrow>=12.0.1
+
+# ML and vision
+torch>=2.0.1
+torchvision>=0.15.2
+matplotlib>=3.7.1
+scikit-image>=0.21.0
+
+# Audio processing
+pytubefix>=4.0.0
+pydub>=0.25.1
+SpeechRecognition>=3.10.0
+ffmpeg-python>=0.2.0
+soundfile>=0.12.1
+
+# Additional dependencies
+huggingface-hub>=0.19.4
+numba>=0.56.4
+dill>=0.3.7
+python-dotenv>=1.0.0
+
+# Core dependencies
+pytubefix>=3.5.0
+openai-whisper>=20231117
+youtube-transcript-api>=0.6.1
+moviepy>=1.0.3
+Pillow>=10.0.0
+numpy>=1.24.0
+
+# RAG dependencies
+llama-index>=0.9.0
+llama-index-llms-openai>=0.1.0
+llama-index-multi-modal-llms-openai>=0.1.0
+llama-index-vector-stores-lancedb>=0.1.0
+lancedb>=0.4.0
+pydantic==1.10.13  # Pin to last v1.x version for compatibility
+
+# Optional: For better performance
+torch>=2.0.0
+torchaudio>=2.0.0
