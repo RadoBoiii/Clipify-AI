@@ -31,9 +31,21 @@ export async function POST(req: Request): Promise<NextResponse> {
       fs.mkdirSync(TEMP_DIR, { recursive: true });
     }
 
+    // Choose script based on environment
+    const isProduction = process.env.NODE_ENV === 'production';
+    const scriptPath = isProduction 
+      ? 'scripts/metadata_analysis.py'  // Production: metadata-only analysis
+      : 'scripts/fast_video_analysis.py'; // Development: full analysis
+
+    console.log(`Using ${isProduction ? 'metadata-only' : 'full'} analysis script`);
+    console.log('Environment variables:', {
+      NODE_ENV: process.env.NODE_ENV,
+      SUPADATA_API_KEY: process.env.SUPADATA_API_KEY ? 'present' : 'missing'
+    });
+
     // Run Python script for analysis
     const pythonProcess = spawn('python', [
-      'scripts/fast_video_analysis.py',
+      scriptPath,
       url
     ]);
 
@@ -77,6 +89,14 @@ export async function POST(req: Request): Promise<NextResponse> {
             ));
             return;
           }
+          
+          // Log transcript data
+          console.log('📝 Transcript Data:', {
+            totalSegments: analysisResult.transcript?.length || 0,
+            firstSegment: analysisResult.transcript?.[0],
+            lastSegment: analysisResult.transcript?.[analysisResult.transcript.length - 1],
+            sampleSegments: analysisResult.transcript?.slice(0, 3)
+          });
           
           resolve(NextResponse.json(analysisResult));
         } catch (e) {
