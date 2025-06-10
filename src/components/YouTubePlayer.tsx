@@ -1,5 +1,31 @@
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 
+// Minimal YouTube IFrame API types
+interface YTPlayer {
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
+  getCurrentTime: () => number;
+  destroy: () => void;
+}
+
+// interface YTPlayerOptions {
+//   height: string;
+//   width: string;
+//   videoId: string;
+//   events: {
+//     onReady: () => void;
+//     onStateChange: (event: { data: number; target: YTPlayer }) => void;
+//   };
+// }
+
+// interface YTPlayerState {
+//   UNSTARTED: -1;
+//   ENDED: 0;
+//   PLAYING: 1;
+//   PAUSED: 2;
+//   BUFFERING: 3;
+//   CUED: 5;
+// }
+
 interface YouTubePlayerProps {
   videoId: string;
   onTimeUpdate?: (time: number) => void;
@@ -10,7 +36,7 @@ export interface YouTubePlayerHandle {
 }
 
 const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(({ videoId, onTimeUpdate }, ref) => {
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<YTPlayer | null>(null);
   const iframeRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -24,24 +50,24 @@ const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(({ vid
 
   useEffect(() => {
     // Load YouTube IFrame API if not already loaded
-    if (!(window as any).YT) {
+    if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
       document.body.appendChild(tag);
     }
 
-    (window as any).onYouTubeIframeAPIReady = () => {
+    window.onYouTubeIframeAPIReady = () => {
       createPlayer();
     };
 
     // If already loaded
-    if ((window as any).YT && (window as any).YT.Player) {
+    if (window.YT && window.YT.Player) {
       createPlayer();
     }
 
     function createPlayer() {
-      if (!iframeRef.current) return;
-      playerRef.current = new (window as any).YT.Player(iframeRef.current, {
+      if (!iframeRef.current || !window.YT) return;
+      playerRef.current = new window.YT.Player(iframeRef.current, {
         height: '360',
         width: '640',
         videoId,
@@ -49,7 +75,7 @@ const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(({ vid
           onReady: () => {},
           onStateChange: () => {},
         },
-      });
+      }) as YTPlayer;
     }
 
     return () => {
@@ -58,7 +84,6 @@ const YouTubePlayer = forwardRef<YouTubePlayerHandle, YouTubePlayerProps>(({ vid
         playerRef.current.destroy();
       }
     };
-    // eslint-disable-next-line
   }, [videoId]);
 
   // Poll current time for autoscroll

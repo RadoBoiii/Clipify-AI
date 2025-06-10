@@ -19,7 +19,7 @@ from typing import Dict, List, Optional, Any
 import yt_dlp
 import whisper
 from youtube_transcript_api import YouTubeTranscriptApi
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 import numpy as np
 from PIL import Image
 import openai
@@ -456,6 +456,7 @@ Instructions:
 5. Create engaging, descriptive titles that capture the essence of each section
 
 Respond in JSON format with an array of chapters:
+Use the following as just an example of the format you should try to follow. It doesn't have to be exactly this timestamp but based on the duration of the particular chapter.
 {{
   "chapters": [
     {{

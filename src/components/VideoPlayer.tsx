@@ -26,7 +26,7 @@ export function VideoPlayer({ videoId, onTimeUpdate }: VideoPlayerProps) {
           controls: 1,
         },
         events: {
-          onStateChange: (event: any) => {
+          onStateChange: (event: { data: number; target: { getCurrentTime: () => number } }) => {
             if (event.data === window.YT.PlayerState.PLAYING) {
               const interval = setInterval(() => {
                 const currentTime = event.target.getCurrentTime();

@@ -25,10 +25,10 @@ ${video.metadata?.author || ''}
 ${video.metadata?.channel || ''}
 
 Transcript (partial):
-${video.transcript.slice(0, 100).map((t: any) => t.text).join(' ')}
+${video.transcript.slice(0, 100).map((t: {text: string}) => t.text).join(' ')}
 
 Chapters:
-${video.chapters.map((c: any) => c.title + ': ' + c.summary).join('\n')}
+${video.chapters.map((c: {title: string, summary: string}) => c.title + ': ' + c.summary).join('\n')}
 
 User question: ${question}
 User question: ${question}
@@ -45,7 +45,7 @@ if the user asks about the owner check information from the internet. Also for a
 
     const answer = completion.choices[0]?.message?.content || 'No answer from agent.';
     return NextResponse.json({ answer });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to process chat request.' }, { status: 500 });
   }
 } 

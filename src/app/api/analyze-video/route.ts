@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import ytdl from 'yt-dlp-wrap';
+//import ytdl from 'yt-dlp-wrap';
 import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
@@ -22,7 +22,7 @@ function cleanOutput(output: string): string {
   return output;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse> {
   try {
     const { url } = await req.json();
 
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       console.error('Python stderr:', chunk);
     });
 
-    return new Promise((resolve) => {
+    return new Promise<NextResponse>((resolve) => {
       pythonProcess.on('close', (code) => {
         if (code !== 0) {
           console.error('Python script error:', error);

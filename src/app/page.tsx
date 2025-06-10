@@ -2,16 +2,29 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { VideoUploader } from '../components/VideoUploader';
-import { VideoPlayer } from '../components/VideoPlayer';
 import { TranscriptPanel } from '../components/TranscriptPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import YouTubePlayer, { YouTubePlayerHandle } from '../components/YouTubePlayer';
 
+interface TranscriptSegment {
+  text: string;
+  start: number;
+  end: number;
+  metadata?: Record<string, unknown>;
+}
+
+interface Chapter {
+  title: string;
+  start_time: number;
+  end_time: number;
+  summary: string;
+}
+
 export default function Home() {
   const [videoId, setVideoId] = useState<string>('');
   const [currentTime, setCurrentTime] = useState(0);
-  const [transcript, setTranscript] = useState<any[]>([]);
-  const [chapters, setChapters] = useState<any[]>([]);
+  const [transcript, setTranscript] = useState<TranscriptSegment[]>([]);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
   const [ragResponse, setRagResponse] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,7 +112,7 @@ export default function Home() {
       });
       const data = await res.json();
       setChatMessages((prev) => [...prev, { role: 'agent' as const, content: data.answer || data.error || 'No response.' }]);
-    } catch (e) {
+    } catch {
       setChatMessages((prev) => [...prev, { role: 'agent' as const, content: 'Error contacting agent.' }]);
     } finally {
       setChatLoading(false);

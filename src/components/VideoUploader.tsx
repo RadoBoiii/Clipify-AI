@@ -8,7 +8,10 @@ import { Card } from '@/components/ui/card';
 declare global {
   interface Window {
     onYouTubeIframeAPIReady: () => void;
-    YT: any;
+    YT: {
+      Player: new (element: HTMLElement, config: unknown) => unknown;
+      PlayerState: { PLAYING: number };
+    };
   }
 }
 
