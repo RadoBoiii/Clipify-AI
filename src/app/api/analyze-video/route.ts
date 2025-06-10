@@ -34,7 +34,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     // Choose script based on environment
     const isProduction = process.env.NODE_ENV === 'production';
     const scriptPath = isProduction 
-      ? 'scripts/metadata_analysis.py'  // Production: metadata-only analysis
+      ? 'scripts/metadata_analysis.ts'  // Production: metadata-only analysis
       : 'scripts/fast_video_analysis.py'; // Development: full analysis
 
     console.log(`Using ${isProduction ? 'metadata-only' : 'full'} analysis script`);

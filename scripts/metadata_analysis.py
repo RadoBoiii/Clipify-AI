@@ -376,7 +376,7 @@ class EnhancedMetadataAnalyzer:
             # Create prompt for LLM analysis
             duration_minutes = metadata.get('duration', 0) / 60
             
-            prompt = f"""Analyze this {duration_minutes:.1f}-minute video transcript and create 3-6 logical chapters based on natural topic changes and content flow.
+            prompt = f"""Analyze this {duration_minutes:.1f}-minute video transcript and create logical chapters based on natural topic changes and content flow.
 
 Video: "{metadata.get('title', 'Unknown')}" by {metadata.get('author', 'Unknown')}
 
@@ -391,6 +391,7 @@ Transcript chunks with timestamps:
             prompt += """
 
 Create chapters in this exact JSON format:
+Use the following as just an example of the format you should try to follow. It doesn't have to be exactly this timestamp but based on the duration of the particular chapter.
 {
   "chapters": [
     {
@@ -406,7 +407,7 @@ Create chapters in this exact JSON format:
 Make chapter titles engaging and descriptive. Ensure chapters flow logically and cover the full video duration."""
 
             response = await self.openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are an expert at analyzing video content and creating logical chapter divisions. Always respond with valid JSON."},
                     {"role": "user", "content": prompt}
