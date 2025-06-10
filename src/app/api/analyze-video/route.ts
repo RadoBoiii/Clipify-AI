@@ -26,8 +26,8 @@ export async function POST(req: Request): Promise<NextResponse> {
   try {
     const { url } = await req.json();
 
-    // Create temp directory if it doesn't exist
-    if (!fs.existsSync(TEMP_DIR)) {
+    // Create temp directory if not in production
+    if (process.env.NODE_ENV !== 'production' && !fs.existsSync(TEMP_DIR)) {
       fs.mkdirSync(TEMP_DIR, { recursive: true });
     }
 
